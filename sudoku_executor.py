@@ -2,11 +2,17 @@ import sys
 from sudokuGenerator import SudokuGenerator
 import sudoku_test_case_generator
 import SudokuSolver
+import sudoku_csp
+
+
+def dfsb_plus(puzzle):
+	s = SudokuGenerator(puzzle)
+	s.generateBoard()
+	print(s.printBoard())
+	s = sudoku_csp.solveSudoku_DFS_AC3(s)
+	print(s.printBoard())
 
 '''
-def dfsb_plus(puzzle):
-
-
 def genetic(puzzle):
 '''
 
@@ -18,9 +24,9 @@ def dancing_links(puzzle):
 	sudoku_solver = sudoku_solver.solve()
 
 def solve_sudoku(puzzle):
-	#dfsb_plus(puzzle)
+	dfsb_plus(puzzle)
 	#genetic(puzzle)
-	dancing_links(puzzle)
+	#dancing_links(puzzle)
 
 if __name__ == "__main__":
 	if len(sys.argv) != 2:
@@ -28,6 +34,6 @@ if __name__ == "__main__":
 		print('python sudoku_client.py <level>')
 		print('1: easy; 2: medium; 3: difficult')
 	
-	level = sys.argv[1]
+	level = int(sys.argv[1])
 	puzzle = sudoku_test_case_generator.generateSudokuInput(level)
 	solve_sudoku(puzzle)
