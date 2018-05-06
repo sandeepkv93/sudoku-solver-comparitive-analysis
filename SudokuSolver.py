@@ -1,7 +1,9 @@
 import numpy as np
-
+import time 
+import sys 
 from sudokuGenerator import SudokuGenerator
 
+# The DataObject class defines all the information needed for every element in the sparse matrix.
 class DataObject(object):
 
 	def __init__(self,C,ID):
@@ -12,13 +14,14 @@ class DataObject(object):
 		self.C = C
 		self.ID = ID
 
+# This stores the information about the different columns(Different Constraints).
 class ColumnObject(object):
 
 	def __init__(self,ide):
-		#self.dataObject = DataObject(self,ide)
 		DataObject.__init__(self,self,ide)
 		self.count = 0
 
+# This is the main function where DLX algorithm is implemented. 
 class SudokuSolver(object):
 
 	def __init__(self, grid):
@@ -26,6 +29,8 @@ class SudokuSolver(object):
 		self.grid = grid
 		self.h = None
 
+	# This function makes sure the elements of the row are linked to column and 
+	# it increments the count of the column header.
 	def LinkRowToColumn(self,rowElement):
 		top = rowElement.C 
 		rowElement.C.count +=1
@@ -34,8 +39,17 @@ class SudokuSolver(object):
 		top.U.D = rowElement
 		top.U = rowElement
 
+	# This function makes sure the different rows are created and then it calls 
+	# the LinkRowToColumn to link it to the columns.
 	def createRows(self,i,j,k,columnList):
 		rowNumber = i*81 + j*9 + k
+
+		# The calculation is as follows because of the constraint order we have used.
+		# 1. Row Constraint
+		# 2. Column Constraint
+		# 3. Box Constraint
+		# In total there are 324 contraints
+
 		pos = DataObject(columnList[i*9 + j],rowNumber)
 		row = DataObject(columnList[81 + i*9 + k],rowNumber)
 		col = DataObject(columnList[162 + j*9 + k],rowNumber)
@@ -55,6 +69,9 @@ class SudokuSolver(object):
 		self.LinkRowToColumn(col)
 		self.LinkRowToColumn(box)
 
+	# The generate links makes sure we generate different possible combinations 
+	# of rows and assosicate it with appropriate columns. We generate different 
+	# combinations only for empty spaces in the suodku.
 	def generateLinks(self):
 
 		h = ColumnObject('h')
@@ -77,6 +94,7 @@ class SudokuSolver(object):
 				else:
 					self.createRows(i,j,self.grid[i][j] - 1,columnList)
 
+	# This will choose the column with the least number of elements in it.
 	def chooseColumn(self):
 		c = self.h.R
 		currentCount = 1000
@@ -87,6 +105,7 @@ class SudokuSolver(object):
 			c = c.R
 		return selectedColumn
 
+	# This unlinks the element from the appropriate row and column. 
 	def cover(self,column):
 		column.L.R = column.R
 		column.R.L = column.L
@@ -102,6 +121,7 @@ class SudokuSolver(object):
 				j = j.R
 			row = row.D
 
+	# This links the element to the aprropriate row and column.
 	def uncover(self,column):
 		row = column.U
 		while row != column:
@@ -116,7 +136,17 @@ class SudokuSolver(object):
 		column.R.L = column
 		column.L.R = column
 
+	# We call this function to perform the search for the solution. 
+	# At each iteration it checks if there are any columns left and if the solution is satisfied.
+	# We pick a column with least rows first and we move ahead by covering this 
+	# column and all the columns where this row as a element in.
+	# In the next iteration we pick the next column with the least number of rows.
+	# If the solution is not found then we backtrack by calling uncover function.
 	def search(self,resultFound):
+		global start_time,steps
+
+		steps = steps + 1
+
 		if resultFound:
 			return
 
@@ -127,6 +157,8 @@ class SudokuSolver(object):
 			res = SudokuGenerator(None,grid)
 			if res.validateBoard():
 				print(res.printBoard())
+				print("END:",time.time() - start_time)
+				print("steps:",steps)
 			else:
 				print("Result Found is not valid")
 				resultFound = False
@@ -157,7 +189,7 @@ class SudokuSolver(object):
 		if self.h != self.h.R:
 			return self.search(False)
 
-
+	# This function retrieves the solution from the sparse matrix.
 	def buildSolution(self):
 		rows = []
 		for r in self.solution:
@@ -169,12 +201,3 @@ class SudokuSolver(object):
 
 		return np.array(grid).reshape(9,9)
 
-print("In main")
-s = SudokuGenerator(".......12........3..23..4....18....5.6..7.8.......9.....85.....9...4.5..47...6...")
-s.generateBoard()
-print(s.validateBoard())
-print(s.printBoard())
-x = s.getGrid()
-s1 = SudokuSolver(x)
-s1.generateLinks()
-sol = s1.solve()
