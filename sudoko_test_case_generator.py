@@ -99,8 +99,36 @@ def getstring(mat):
                 st = st + str(mat[i][j])
     return st
 
+def generatorSudokuInput(level):
+    curseed = [row[:] for row in seed1]
+    curseed = doswapcol(curseed)
+    curseed = doswaprow(curseed)
+
+    if (level == 1):
+        print("Sudoko Easy Input")
+        removecellcount = 81 - 50
+    elif (level == 2):
+        print("Sudoko Medium Input")
+        removecellcount = 81 - 40
+    else:  # if (level == 3):
+        print("Sudoko Hard Input")
+        removecellcount = 81 - 30
+
+    sudokoinput = removecell(curseed, removecellcount)
+
+    st = getstring(sudokoinput)
+
+    print(st)
+    return st
+
 if __name__ == '__main__':
 #def main():
+    #generatorSudokuInput(1)
+    #generatorSudokuInput(2)
+    #generatorSudokuInput(3)
+
+    #sys.exit(0)
+
     ans = ""
     #input parsing
     #print('python <filename> <seperate0,1> <level 1-easy, 2-medium, 3-hard> '
@@ -135,11 +163,11 @@ if __name__ == '__main__':
             curseed = doswaprow(curseed)
 
         if (level == 1):
-            removecellcount = 81 - 36
+            removecellcount = 81 - 50
         elif (level == 2):
-            removecellcount = 81 - 30
+            removecellcount = 81 - 40
         else:  # if (level == 3):
-            removecellcount = 81 - 27
+            removecellcount = 81 - 30
 
         sudokoinput = removecell(curseed, removecellcount)
 
