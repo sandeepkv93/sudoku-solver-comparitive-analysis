@@ -189,3 +189,11 @@ class SudokuValidator(object):
 	def getGrid(self):
 		return self.grid
 
+def printBoard(grid):
+	board = BOARDER
+	for i, row in enumerate(grid):
+		num = str(row)[1:-1]
+		board += "| %s | %s | %s | \n" % ( num[0:5], num[6:11], num[12:17])
+		if (i+1) % 3 == 0:
+			board += BOARDER
+	return board

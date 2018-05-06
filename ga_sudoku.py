@@ -247,20 +247,18 @@ class Chromosome(object):
 
 class Sudoku(object):
 
-    def __init__(self):
-        # Need to call Pruthvi's puzzle generator here
-        self.input_puzzle = self.load("input_puzzle.txt")
-
-    def load(self, path):
-        with open(path, "r") as f:
-            values = numpy.loadtxt(f).reshape((dim, dim)).astype(int)
-        return values
+    def __init__(self, p):
+        input_formatted = [x if x != '.' else '0' for x in p]
+        self.input_puzzle = numpy.array(input_formatted).reshape((dim,dim)).astype(int)
 
     def save(self, path, solution):
         with open(path, "w") as f:
             numpy.savetxt(f, solution.values.reshape(dim * dim), fmt='%d')
 
     def solve_puzzle(self):
+        print("==================")
+        print("Genetic Algorithm")
+        print("==================")
         num_chromosomes = 100
         num_elites = int(0.1 * num_chromosomes)
         num_generations = 1000
@@ -272,18 +270,14 @@ class Sudoku(object):
         stale_count = 0
         for generation in range(0, num_generations):
 
-            print("Generation %d" % generation)
+            #print("Generation %d" % generation)
 
             best_fitness = 0.0
             for c in range(0, num_chromosomes):
                 fitness = self.population.chromosomes[c].fitness
                 if (fitness == 1):
                     print("Solution found at generation %d!" % generation)
-                    print("Solution for the Puzzle:")
-                    print(self.input_puzzle.astype(int))
-                    print("\nSolution: ")
-                    print(self.population.chromosomes[c].values.astype(int))
-                    return self.population.chromosomes[c]
+                    return self.population.chromosomes[c].values.astype(int)
 
                 if (fitness > best_fitness):
                     best_fitness = fitness
@@ -339,4 +333,4 @@ class Sudoku(object):
 if __name__ == "__main__":
     sudoku = Sudoku()
     solution = sudoku.solve_puzzle()
-    if solution: sudoku.save("ga_solution.txt", solution)
+    #if solution: sudoku.save("ga_solution.txt", solution)

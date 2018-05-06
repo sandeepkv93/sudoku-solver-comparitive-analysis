@@ -153,7 +153,6 @@ class SudokuSolver(object):
 
 		if self.h == self.h.R:
 			resultFound = True
-			print("Solution Found")
 			grid = self.buildSolution()
 			res = SudokuValidator(None,grid)
 			if res.validateBoard():
@@ -186,6 +185,9 @@ class SudokuSolver(object):
 			return 
 
 	def solve(self):
+		print('=======================')
+		print('Dancing Link Algorithm')
+		print('=======================')
 		if self.h != self.h.R:
 			return self.search(False)
 

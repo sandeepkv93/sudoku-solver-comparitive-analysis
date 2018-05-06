@@ -247,6 +247,9 @@ def dfs_CSP_plus(s):
 
 #Driver function to be called from combined test case executor
 def solveSudoku_DFS_AC3(s):
+    print("==================")
+    print("DFSB-AC3 Algorithm")
+    print("==================")    
     ans = dfs_CSP_plus(s)
     if (ans == 2):
         print("Number of search = %d" % search)
