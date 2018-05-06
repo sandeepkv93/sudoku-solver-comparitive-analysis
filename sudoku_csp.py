@@ -29,149 +29,9 @@ search = 0
 prune = 0
 
 
-#FFunction to check if the current assignment is satisfying all the constraints,
-# if then return true to indicate this is the final solution.
-def checksol(mat, arr):
-    for x in range(size):
-        if(arr[x] == -1):
-            return false
-
-        for y in range(size):
-            if(mat[x][y] == 1 and arr[y] != -1):
-                if(arr[x] == arr[y]):
-                    return false
-    return true
-
-#Function to pick an assigned variable(state) for which any color is not assigned.
-def getvar(mat):
-    for i in range(0,9):
-        for j in range(0,9):
-            if mat[i][j] == 0:
-                return i, j
-    return -1, -1
-
-#Function checks for solution, if not assigns a value for a variable and call the
-# function recursively, if solution is found return true.
-# Otherwise backtrack on the value which was assigned.
-def doCSP(s):
-    #1. check for solution if ok return true
-    #2. get unassigned var
-    #3. assign a value for var from domain in a loop and update assign
-    #4. recursively call doCSP
-    #5. check for return val, if true return true
-    #6. backtrack the assignment
-
-    #print(size, domain)
-    #return
-    #1
-
-    #ans = s.validateBoard(solutionFound=True)
-    ans = s.checkBoard()
-    if (ans == 1):
-        return 1
-    if (ans == 2):
-        return 2
-
-    i, j = getvar(s.grid)
-    if(i == -1 and j == -1):
-        return 2
-
-    #print(var)
-    #check for each value of domain
-    for c in range(1, 10):
-        global search
-        search = search + 1
-        s.grid[i, j] = c
-
-        #recursively to call doCSP
-        ans = doCSP(s)
-        if(ans == 2):
-            return 2
-
-        #backtrack due to failure
-        s.grid[i, j] = 0
-
-    return 1
-
-
-#Function is part of AC3 algorithm. Which removes inconsistent values for
-# basically arc between vhead and vtail variables and reduces the domains of
-# vtail variable and updates the dommat 2D arrary. If any updates are done to
-# dommat then it returns True otherwise it returns false.
-#return true - if removed any domain values.
-#return false - otherwise
-def remove_inconsistent_values(vhead, vtail, mat, dommat, assign):
-    ret = false
-    flag = 0
-
-    #if color is already assigned check for only neighbours and prune
-    if(assign[vhead] != -1):    #it is already assigned a color
-        setcolor = assign[vhead]
-        for x in range(size):
-            if(mat[vhead][x] == 1 and dommat[x][setcolor] == 1):
-                flag = 1
-                global prune
-                prune = prune + 1
-                dommat[x][setcolor] = 0
-                ret = true
-    else:
-        #Check for all the arc from vtail->x and purne the value accordingly which are conflicting
-        for x in range(domain):
-            if(dommat[vtail][x] == 1):
-                for y in range(domain):
-                    if(x != y and dommat[vhead][y] == 1):
-                        flag = 1
-                        #break
-                if(flag == 0):
-                    #global prune
-                    prune = prune + 1
-                    dommat[vtail][x] = 0
-                    ret = true
-
-    return ret
-
 #Function implements the AC3 – Arc Consistency algorithm.
 # Iterates through all the arc’s and checks for any consistency issues and
 # appropriately reduces the dommat with corresponding domain value.
-def doac3_old(s, assign, dommat, var):
-    #ans = []
-
-    fifo = collections.deque()
-
-    for x in range(size):
-        if(mat[var][x] == 1 and assign[x] == -1):
-            temp = [var, x]
-            fifo.append(temp)
-
-    #temp = [var, color]
-    #fifo = collections.deque()
-    #fifo.append(temp)
-
-    while len(fifo) != 0:
-        #if(var == 355):
-        #    print (len(fifo))
-        vhead, vtail = fifo.popleft()
-        #print(var, col)
-
-        #remove domain values from vtail
-        res = remove_inconsistent_values(vhead, vtail, mat, dommat, assign)
-        if(res == true):    #go through the neighbours of vtail and add them to queue
-            for x in range(size):
-                if(mat[vtail][x] == 1 and assign[x] == -1 and vhead != x):
-                    #ans.append([x, col])
-                    fifo.append([vtail,x])
-
-        # check for any empty dommat -- This check may cause problems
-        emp = 0
-        for x in range(domain):
-            if(dommat[vtail][x] == 1):
-                emp = 1
-        if emp == 0 :       ## no values in the domain are possible
-            return false
-
-    ##print(dommat)
-    return true
-
 def doac3(s, assign, dommat, var):
     global prune
     row = int(var / 9)
@@ -197,13 +57,7 @@ def doac3(s, assign, dommat, var):
             prune = prune + 1
 
     return true
-#Function to revert the value removed
-#not used now
-def revertbackac3(mat, assign, dommat, ac3output):
-    for var, col in ac3output:
-        #print(var, col)
-        dommat[var][col] = 1
-    return
+
 
 #Function implements the MCV – minimum constraint variable algorithm,
 # where it reorder the variables based on the which variable is having
@@ -391,6 +245,7 @@ def dfs_CSP_plus(s):
 
     return ans
 
+#Driver function to be called from combined test case executor
 def solveSudoku_DFS_AC3(s):
     ans = dfs_CSP_plus(s)
     if (ans == 2):
@@ -398,8 +253,8 @@ def solveSudoku_DFS_AC3(s):
         print("Number of prune = %d" % prune)
     return s
 
+#debug main function to run the DFS(CSP) algorithm seperately
 if __name__ == '__main__':
-#def main():
     ans = ""
 
     #s = SudokuGenerator(".......12........3..23..4....18....5.6..7.8.......9.....85.....9...4.5..47...6...")
@@ -421,10 +276,10 @@ if __name__ == '__main__':
     s.generateBoard()
 
 
-    #solveSudoku_DFS_AC3(s)
+    solveSudoku_DFS_AC3(s)
 
-    #print(s.printBoard())
-    #sys.exit(0)
+    print(s.printBoard())
+    sys.exit(0)
 
     start = time.time()
     ans = dfs_CSP_plus(s)
