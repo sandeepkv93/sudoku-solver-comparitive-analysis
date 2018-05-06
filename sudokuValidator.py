@@ -17,7 +17,6 @@ class SudokuValidator(object):
 			else:
 				grid.append(int(c))
 		self.grid = np.array(grid).reshape(9,9)
-		print(self.grid)
 
 	# Makes sure the contraints are satisfied in rows,columns and boxes.
 	def checkrowcol(self, row, col):

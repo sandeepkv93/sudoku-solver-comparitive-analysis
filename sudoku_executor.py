@@ -1,12 +1,11 @@
 import sys
-from sudokuGenerator import SudokuGenerator
+from sudokuValidator import SudokuValidator
 import sudoku_test_case_generator
-import SudokuSolver
 import sudoku_csp
-
+import DancingLinks
 
 def dfsb_plus(puzzle):
-	s = SudokuGenerator(puzzle)
+	s = SudokuValidator(puzzle)
 	s.generateBoard()
 	print(s.printBoard())
 	s = sudoku_csp.solveSudoku_DFS_AC3(s)
@@ -17,16 +16,17 @@ def genetic(puzzle):
 '''
 
 def dancing_links(puzzle):
-	sg = SudokuGenerator(puzzle)
+	sg = SudokuValidator(puzzle)
 	sg.generateBoard()
-	sudoku_solver = SudokuSolver.SudokuSolver(sg.getGrid())
+	sudoku_solver = DancingLinks.SudokuSolver(sg.getGrid())
 	sudoku_solver.generateLinks()
 	sudoku_solver = sudoku_solver.solve()
+	return 
 
 def solve_sudoku(puzzle):
 	dfsb_plus(puzzle)
 	#genetic(puzzle)
-	#dancing_links(puzzle)
+	dancing_links(puzzle)
 
 if __name__ == "__main__":
 	if len(sys.argv) != 2:

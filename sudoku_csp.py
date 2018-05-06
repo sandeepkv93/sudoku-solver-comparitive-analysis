@@ -9,7 +9,7 @@ import collections
 
 import numpy as np
 
-from sudokuGenerator import SudokuGenerator
+from sudokuValidator import SudokuValidator
 
 
 # few global variable used across
@@ -270,7 +270,7 @@ if __name__ == '__main__':
     #plus Time = 7.159 millisecond, Number of search = 20
     #plus ac3 Time = 4.780 millisecond, Number of search = 21, Number of prune = 504
     #30
-    s = SudokuGenerator("879.3254621.4.587.5.67..2.3.57..932498..4.65.3.45...8.76892.4.51.235..6.4.5.871..")
+    s = SudokuValidator("879.3254621.4.587.5.67..2.3.57..932498..4.65.3.45...8.76892.4.51.235..6.4.5.871..")
     #plus Time = 9.664 millisecond , Number of search = 30
     #plus ac3 Time = 7.951 millisecond, Number of search = 32, Number of prune = 768
     s.generateBoard()

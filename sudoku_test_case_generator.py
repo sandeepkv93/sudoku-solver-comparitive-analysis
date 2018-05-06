@@ -117,8 +117,6 @@ def generateSudokuInput(level):
     sudokoinput = removecell(curseed, removecellcount)
 
     st = getstring(sudokoinput)
-
-    print(st)
     return st
 
 if __name__ == '__main__':
