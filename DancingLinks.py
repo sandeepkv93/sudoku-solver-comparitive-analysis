@@ -4,6 +4,7 @@ import sys
 from sudokuValidator import SudokuValidator
 
 steps = 0
+resultFound = False
 # The DataObject class defines all the information needed for every element in the sparse matrix.
 class DataObject(object):
 
@@ -143,9 +144,9 @@ class SudokuSolver(object):
 	# column and all the columns where this row as a element in.
 	# In the next iteration we pick the next column with the least number of rows.
 	# If the solution is not found then we backtrack by calling uncover function.
-	def search(self,resultFound):
+	def search(self):
 		global steps
-
+		global resultFound
 		steps = steps + 1
 
 		if resultFound:
@@ -161,7 +162,6 @@ class SudokuSolver(object):
 			else:
 				print("Result Found is not valid")
 				resultFound = False
-			exit()
 		else:
 			c = self.chooseColumn()
 			self.cover(c)
@@ -172,7 +172,7 @@ class SudokuSolver(object):
 				while currentRightElement != r:
 					self.cover(currentRightElement.C)
 					currentRightElement = currentRightElement.R
-				self.search(resultFound)
+				self.search()
 
 				r = self.solution.pop()
 				c = r.C
@@ -188,8 +188,10 @@ class SudokuSolver(object):
 		print('=======================')
 		print('Dancing Link Algorithm')
 		print('=======================')
+		global resultFound
+		resultFound = False
 		if self.h != self.h.R:
-			return self.search(False)
+			return self.search()
 
 	# This function retrieves the solution from the sparse matrix.
 	def buildSolution(self):

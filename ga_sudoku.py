@@ -270,7 +270,7 @@ class Sudoku(object):
         stale_count = 0
         for generation in range(0, num_generations):
 
-            #print("Generation %d" % generation)
+            print("Generation %d" % generation)
 
             best_fitness = 0.0
             for c in range(0, num_chromosomes):

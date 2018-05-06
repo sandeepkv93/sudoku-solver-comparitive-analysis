@@ -15,7 +15,7 @@ def dfsb_plus(puzzle):
 	start = time.time()
 	s = sudoku_csp.solveSudoku_DFS_AC3(s)
 	end = time.time()
-	execution_time['dfsb_plus'] = (end - start)*1000
+	execution_time['dfsb_ac3'] = (end - start)*1000
 	print(s.printBoard())
 
 def genetic(puzzle):
@@ -41,8 +41,13 @@ def solve_sudoku(puzzle):
 	dfsb_plus(puzzle)
 	genetic(puzzle)
 	dancing_links(puzzle)
-	for key, value in execution_time.items():
-		print(key,':',value,' ms')
+	print('\n=====================================')
+	print('|             Analysis              |')
+	print('=====================================\n')
+	print("{:<15} {:<10}".format('Algorithm','Time Taken'))
+	print('-------------------------------------')
+	for k, v in execution_time.items():
+		print("{:<15} {:<10}".format(k, v),'ms')
 
 if __name__ == "__main__":
 	if len(sys.argv) != 2:
