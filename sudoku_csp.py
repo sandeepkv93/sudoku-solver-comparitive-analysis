@@ -16,20 +16,18 @@ from sudokuGenerator import SudokuGenerator
 false = 0
 true = 1
 
-#size - is basically number of variables
-size = 0
+#size - is basically number of variables or cells
+size = 81
 
-#domain - it basically the number of values(colors) possible for each variables
-domain = 0
-
-#deg - Degree of each variable as per the graph
-deg = []
+#domain - it basically the number of values(0-9) possible for each variables
+domain = 9
 
 #variable to count the number of searches
 search = 0
 
 #Variable to count the number of prune
 prune = 0
+
 
 #FFunction to check if the current assignment is satisfying all the constraints,
 # if then return true to indicate this is the final solution.
@@ -393,12 +391,18 @@ def dfs_CSP_plus(s):
 
     return ans
 
+def solveSudoku_DFS_AC3(s):
+    ans = dfs_CSP_plus(s)
+    if (ans == 2):
+        print("Number of search = %d" % search)
+        print("Number of prune = %d" % prune)
+    return s
 
 if __name__ == '__main__':
 #def main():
     ans = ""
 
-    s = SudokuGenerator(".......12........3..23..4....18....5.6..7.8.......9.....85.....9...4.5..47...6...")
+    #s = SudokuGenerator(".......12........3..23..4....18....5.6..7.8.......9.....85.....9...4.5..47...6...")
     #plus Time = 450575.784 millisecond,Number of search = 1114771
     #plusac3 - Time = 358912.367 millisecond, Number of search = 1229729
     #plus sc3 - Time = 281353.698 millisecond, Number of search = 1229729, Number of prune = 29513496
@@ -411,20 +415,19 @@ if __name__ == '__main__':
     #plus Time = 7.159 millisecond, Number of search = 20
     #plus ac3 Time = 4.780 millisecond, Number of search = 21, Number of prune = 504
     #30
-    #s = SudokuGenerator("879.3254621.4.587.5.67..2.3.57..932498..4.65.3.45...8.76892.4.51.235..6.4.5.871..")
+    s = SudokuGenerator("879.3254621.4.587.5.67..2.3.57..932498..4.65.3.45...8.76892.4.51.235..6.4.5.871..")
     #plus Time = 9.664 millisecond , Number of search = 30
     #plus ac3 Time = 7.951 millisecond, Number of search = 32, Number of prune = 768
     s.generateBoard()
 
-    domain = 9
-    size = 81
+
+    #solveSudoku_DFS_AC3(s)
+
+    #print(s.printBoard())
+    #sys.exit(0)
 
     start = time.time()
-    mode = 1
-    if(mode == 0):
-        ans = doCSP(s)
-    else:
-        ans = dfs_CSP_plus(s)
+    ans = dfs_CSP_plus(s)
     end = (time.time() - start) * 1000
 
     #output the result
@@ -436,8 +439,7 @@ if __name__ == '__main__':
 
     print("Time = %0.3f millisecond" % end)
     print("Number of search = %d" % search)
-    if(mode == 1):
-        print("Number of prune = %d" % prune)
+    print("Number of prune = %d" % prune)
 
 
 
