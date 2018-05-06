@@ -17,7 +17,106 @@ class SudokuGenerator(object):
 				grid.append(int(c))
 		self.grid = np.array(grid).reshape(9,9)
 		print(self.grid)
-	
+
+	def checkrowcol(self, row, col):
+		currentRow = []
+		for cell in self.grid[row]:
+			if cell != 0 and (cell not in currentRow):
+				currentRow.append(cell)
+			elif cell != 0:
+				return 1
+		for cell in self.grid[row]:
+			if cell == 0:
+				return 0
+
+		transposeMatrix = np.transpose(self.grid)
+		currentCol = []
+		for cell in self.grid[col]:
+			if cell != 0 and (cell not in currentCol):
+				currentCol.append(cell)
+			elif cell != 0:
+				return 1
+		for cell in self.grid[col]:
+			if cell == 0:
+				return 0
+
+		BoxStartEndRange = {
+			'0': [(0, 3), (0, 3)], '1': [(0, 3), (3, 6)], '2': [(0, 3), (6, 9)],
+			'3': [(3, 6), (0, 3)], '4': [(3, 6), (3, 6)], '5': [(3, 6), (6, 9)],
+			'6': [(6, 9), (0, 3)], '7': [(6, 9), (3, 6)], '8': [(6, 9), (6, 9)]
+		}
+
+		solutionFound = True
+		correctk = 0
+		for k in range(0, 9):
+			for i in range(BoxStartEndRange[str(k)][0][0], BoxStartEndRange[str(k)][0][1]):
+				for j in range(BoxStartEndRange[str(k)][1][0], BoxStartEndRange[str(k)][1][1]):
+					if(row == i or col == j):
+						correctk = k
+						break
+
+		currentBox = []
+		for i in range(BoxStartEndRange[str(correctk)][0][0], BoxStartEndRange[str(correctk)][0][1]):
+			for j in range(BoxStartEndRange[str(correctk)][1][0], BoxStartEndRange[str(correctk)][1][1]):
+				if self.grid[i][j] != 0 and (self.grid[i][j] not in currentBox):
+					currentBox.append(self.grid[i][j])
+				elif self.grid[i][j] != 0:
+					return 1
+
+		for i in range(BoxStartEndRange[str(correctk)][0][0], BoxStartEndRange[str(correctk)][0][1]):
+			for j in range(BoxStartEndRange[str(correctk)][1][0], BoxStartEndRange[str(correctk)][1][1]):
+				if self.grid[i][j] == 0:
+					return 0
+		return 1
+
+	def checkBoard(self):
+		numberOfRows = self.grid.shape[0]
+		numberOfColumns = self.grid.shape[1]
+
+		for row in range(0, numberOfRows):
+			currentRow = []
+			for cell in self.grid[row]:
+				if cell != 0 and (cell not in currentRow):
+					currentRow.append(cell)
+				elif cell != 0:
+					return 1
+			for cell in self.grid[row]:
+				if cell == 0:
+					return 0
+
+		transposeMatrix = np.transpose(self.grid)
+		for col in range(0,numberOfColumns):
+			currentColumn = []
+			for cell in transposeMatrix[col]:
+				if cell != 0 and (cell not in currentColumn):
+					currentColumn.append(cell)
+				elif cell != 0:
+					return 1
+			for cell in transposeMatrix[col]:
+				if cell == 0:
+					return 0
+
+		BoxStartEndRange = {
+							'0': [(0,3),(0,3)], '1': [(0,3),(3,6)], '2': [(0,3),(6,9)],
+							'3': [(3,6),(0,3)], '4': [(3,6),(3,6)], '5': [(3,6),(6,9)],
+							'6': [(6,9),(0,3)],  '7': [(6,9),(3,6)], '8': [(6,9),(6,9)]
+							}
+
+		solutionFound = True
+		for k in range(0,9):
+			currentBox = []
+			for i in range(BoxStartEndRange[str(k)][0][0],BoxStartEndRange[str(k)][0][1]):
+				for j in range(BoxStartEndRange[str(k)][1][0],BoxStartEndRange[str(k)][1][1]):
+					if self.grid[i][j] != 0 and (self.grid[i][j] not in currentBox):
+						currentBox.append(self.grid[i][j])
+					elif self.grid != 0:
+						return 1
+			for i in range(BoxStartEndRange[str(k)][0][0], BoxStartEndRange[str(k)][0][1]):
+				for j in range(BoxStartEndRange[str(k)][1][0], BoxStartEndRange[str(k)][1][1]):
+					if self.grid[i][j] == 0:
+						return 0
+		return 2
+
 	def validateBoard(self, solutionFound=False):
 		numberOfRows = self.grid.shape[0]
 		numberOfColumns = self.grid.shape[1]
