@@ -1,7 +1,7 @@
 import numpy as np
 import time 
 import sys 
-from sudokuGenerator import SudokuGenerator
+from sudokuValidator import SudokuValidator
 
 # The DataObject class defines all the information needed for every element in the sparse matrix.
 class DataObject(object):
@@ -143,7 +143,7 @@ class SudokuSolver(object):
 	# In the next iteration we pick the next column with the least number of rows.
 	# If the solution is not found then we backtrack by calling uncover function.
 	def search(self,resultFound):
-		global start_time,steps
+		global steps
 
 		steps = steps + 1
 
@@ -154,15 +154,14 @@ class SudokuSolver(object):
 			resultFound = True
 			print("Solution Found")
 			grid = self.buildSolution()
-			res = SudokuGenerator(None,grid)
+			res = SudokuValidator(None,grid)
 			if res.validateBoard():
 				print(res.printBoard())
-				print("END:",time.time() - start_time)
 				print("steps:",steps)
 			else:
 				print("Result Found is not valid")
 				resultFound = False
-			return
+			exit()
 		else:
 			c = self.chooseColumn()
 			self.cover(c)
