@@ -15,6 +15,7 @@ samoutfile = None
 #output file handle
 of, sf = None, None
 
+
 def wrongparam():
     print('Wrong parameters usage!!!!!')
     print('python <filename> <seperate0,1> <level 1-easy, 2-medium, 3-hard> '
@@ -22,25 +23,23 @@ def wrongparam():
     print("\nExiting ------------")
     sys.exit(0)
 
-seed1 = [
-    [1, 2, 3, 4, 5, 6, 7, 8, 9],
-    [4, 5, 6, 7, 8, 9, 1, 2, 3],
-    [7, 8, 9, 1, 2, 3, 4, 5, 6],
-    [2, 3, 4, 5, 6, 7, 8, 9, 1],
-    [5, 6, 7, 8, 9, 1, 2, 3, 4],
-    [8, 9, 1, 2, 3, 4, 5, 6, 7],
-    [3, 4, 5, 6, 7, 8, 9, 1, 2],
-    [6, 7, 8, 9, 1, 2, 3, 4, 5],
-    [9, 1, 2, 3, 4, 5, 6, 7, 8]
-]
+
+seed1 = [[1, 2, 3, 4, 5, 6, 7, 8, 9], [4, 5, 6, 7, 8, 9, 1, 2, 3],
+         [7, 8, 9, 1, 2, 3, 4, 5, 6], [2, 3, 4, 5, 6, 7, 8, 9,
+                                       1], [5, 6, 7, 8, 9, 1, 2, 3, 4],
+         [8, 9, 1, 2, 3, 4, 5, 6, 7], [3, 4, 5, 6, 7, 8, 9, 1,
+                                       2], [6, 7, 8, 9, 1, 2, 3, 4,
+                                            5], [9, 1, 2, 3, 4, 5, 6, 7, 8]]
+
 
 def swapcol(mat, i, j):
-    if(i != j):
+    if (i != j):
         for n in range(0, 9):
             a = mat[n][i]
             mat[n][i] = mat[n][j]
             mat[n][j] = a
     return mat
+
 
 def doswapcol(mat):
     for k in range(0, 10):
@@ -55,6 +54,7 @@ def doswapcol(mat):
         mat = swapcol(mat, col1, col2)
     return mat
 
+
 def swaprow(mat, row1, row2):
     if (row1 != row2):
         for n in range(0, 9):
@@ -62,6 +62,7 @@ def swaprow(mat, row1, row2):
             mat[row1][n] = mat[row2][n]
             mat[row2][n] = a
     return mat
+
 
 def doswaprow(mat):
     for k in range(0, 10):
@@ -76,16 +77,18 @@ def doswaprow(mat):
         mat = swaprow(mat, row1, row2)
     return mat
 
+
 def removecell(matinput, removecellcount):
     mat = [x[:] for x in matinput]
     i = 0
     while i < removecellcount:
         row = randint(0, 8)
         col = randint(0, 8)
-        if(mat[row][col] != 0):
+        if (mat[row][col] != 0):
             i = i + 1
             mat[row][col] = 0
     return mat
+
 
 def getstring(mat):
     st = ""
@@ -96,6 +99,7 @@ def getstring(mat):
             else:
                 st = st + str(mat[i][j])
     return st
+
 
 def generateSudokuInput(level):
     curseed = [row[:] for row in seed1]
@@ -117,8 +121,9 @@ def generateSudokuInput(level):
     st = getstring(sudokoinput)
     return st
 
+
 if __name__ == '__main__':
-#def main():
+    #def main():
     #generatorSudokuInput(1)
     #generatorSudokuInput(2)
     #generatorSudokuInput(3)
@@ -149,7 +154,7 @@ if __name__ == '__main__':
         sf.close()
         sys.exit(0)
 
-    if(sep == 1):
+    if (sep == 1):
         print("Single test case ")
         curseed = [row[:] for row in seed1]
         for t in range(0, 3):
@@ -183,7 +188,7 @@ if __name__ == '__main__':
     else:
         print("Multiple test case ")
 
-        for x in range(0, count*3):
+        for x in range(0, count * 3):
             curseed = [row[:] for row in seed1]
 
             for t in range(0, 3):
@@ -194,17 +199,17 @@ if __name__ == '__main__':
             #shuffle(curseed)
 
             removecellcount = 40
-            if(x >= 0 and x < count):
+            if (x >= 0 and x < count):
                 removecellcount = 81 - 36
-            elif(x >= count and x < count *2):
+            elif (x >= count and x < count * 2):
                 removecellcount = 81 - 30
-            else: #if (level == 3):
+            else:  #if (level == 3):
                 removecellcount = 81 - 27
 
             sudokoinput = removecell(curseed, removecellcount)
 
             sf.write("Solved output = ")
-            sf.write(str(x+1))
+            sf.write(str(x + 1))
             sf.write("\n")
             print("Input = ", x + 1)
             for i in range(0, 9):
@@ -220,8 +225,3 @@ if __name__ == '__main__':
 
     of.close()
     sf.close()
-
-
-
-
-

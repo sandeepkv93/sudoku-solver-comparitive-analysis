@@ -249,7 +249,8 @@ class Sudoku(object):
 
     def __init__(self, p):
         input_formatted = [x if x != '.' else '0' for x in p]
-        self.input_puzzle = numpy.array(input_formatted).reshape((dim,dim)).astype(int)
+        self.input_puzzle = numpy.array(input_formatted).reshape(
+            (dim, dim)).astype(int)
 
     def save(self, path, solution):
         with open(path, "w") as f:
