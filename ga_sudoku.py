@@ -3,14 +3,27 @@ import random
 import copy
 
 dim = 9
+'''
+To Check whether the value is already present in the given row
+'''
 
 
 def is_row_duplicate(board, row, value):
     return any(board[row][column] == value for column in range(dim))
 
 
+'''
+To Check whether the value is already present in the given column
+'''
+
+
 def is_column_duplicate(board, column, value):
     return any(board[row][column] == value for row in range(dim))
+
+
+'''
+To Check whether the value is already present in the given rown column's block
+'''
 
 
 def is_block_duplicate(board, row, column, value):
@@ -27,11 +40,20 @@ def is_block_duplicate(board, row, column, value):
     return False
 
 
+'''
+Population class
+'''
+
+
 class Population(object):
 
     def __init__(self):
         self.chromosomes = []
         return
+
+    '''
+    This seeds an initial population
+    '''
 
     def seed(self, num_chromosomes, input_puzzle):
         self.chromosomes = []
@@ -82,6 +104,11 @@ class Population(object):
         self.update_fitness()
         print("Population seeding is complete.")
 
+    '''
+
+    Updates the fitness value of all the chromosomes of the population
+    '''
+
     def update_fitness(self):
         for chromosome in self.chromosomes:
             chromosome.update_fitness()
@@ -90,11 +117,22 @@ class Population(object):
         self.chromosomes.sort(key=lambda a: a.fitness, reverse=True)
 
 
+'''
+
+Chromosome object representing the each individual organism
+'''
+
+
 class Chromosome(object):
 
     def __init__(self):
         self.values = numpy.zeros((dim, dim))
         self.fitness = 0.0
+
+    '''
+    Fitness function
+    Checks how much the solution is nearer to the solved sudoku with all constraints satisfied
+    '''
 
     def update_fitness(self):
         column_count = numpy.zeros(dim)
@@ -133,6 +171,10 @@ class Chromosome(object):
 
         self.fitness = fitness
 
+    '''
+    Mutate the chromosome with random swaps
+    '''
+
     def mutate(self, mutation_rate, input_puzzle):
         r = random.uniform(0, 1.0)
         if (r < mutation_rate):
@@ -167,6 +209,10 @@ class Chromosome(object):
                             from_column]
                         self.values[row1][from_column] = temp
                         break
+
+    '''
+    Cross over operation between two parent chroosomes to reproduce a child
+    '''
 
     @staticmethod
     def crossover(parent1, parent2):
@@ -251,10 +297,6 @@ class Sudoku(object):
         input_formatted = [x if x != '.' else '0' for x in p]
         self.input_puzzle = numpy.array(input_formatted).reshape(
             (dim, dim)).astype(int)
-
-    def save(self, path, solution):
-        with open(path, "w") as f:
-            numpy.savetxt(f, solution.values.reshape(dim * dim), fmt='%d')
 
     def solve_puzzle(self):
         print("==================")
